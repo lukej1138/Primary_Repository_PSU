@@ -1,0 +1,41 @@
+#include <iostream>
+#include <cstring>
+#include <cctype>
+using namespace std;
+
+int main(){
+  char input[81];
+  cout << "Gib Value" << endl;
+  cin.get(input,81);
+  cin.get();
+  char newInput[81];
+  char reverseInput[81];
+  int firstCounter = 0;
+  for(int i = 0; i < strlen(input); i++){
+    if(isalpha(input[i])){
+      newInput[firstCounter] = input[i];
+      firstCounter++;
+    }
+  }
+  newInput[firstCounter] = '\0';
+
+  for(int i = 0; i < strlen(newInput); i++){
+    tolower(newInput[i]);
+  }
+  
+  int counter = 0;
+  for(int i = s
+  reverseInput[counter] = '\0';
+  cout << reverseInput << endl;
+  cout << newInput << endl;
+
+  if(strcmp(reverseInput, newInput) == 0){
+      cout<< "Palindrome" << endl;
+
+  } else {
+      cout << "Not a palindrome" << endl;
+
+    }
+
+
+}
