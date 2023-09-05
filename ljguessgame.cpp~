@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
-
+//No global variables, ever
+//No strings
+//You should include iostream, not stdio. Also use new/delete instead of malloc/free
 using namespace std;
 int main(){
   //set variables for while loops and the final input (y/n)
