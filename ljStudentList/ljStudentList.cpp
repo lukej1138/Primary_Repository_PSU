@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <iomanip>
 /*
   Lucas Johnson
   9/20/23
@@ -140,7 +141,7 @@ void del_func(vector<Student_stuff*> &list){
 //Prints out each student and their additional information.
 void prnt_func(vector<Student_stuff*> &list){
   for(vector<Student_stuff*>::iterator it = list.begin(); it != list.end(); it++){
-    cout << (*it)->first_name << " " << (*it)->last_name << ", " << (*it)->id << ", " << (*it)->GPA << endl;
+    cout << (*it)->first_name << " " << (*it)->last_name << ", " << (*it)->id << ", " << setprecision(2) << (*it)->GPA << endl;
 
   }
 
