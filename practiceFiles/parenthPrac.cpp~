@@ -1,0 +1,34 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+int main(){
+  char input[81];
+  cout << "Gib input" << endl;
+  cin.get(input, 80);
+  cin.get();
+  int p1counter = 0;
+  int p2counter = 0;
+  for(int i = 0; i < strlen(input); i++){
+    if(input[i] == '('){
+      p1counter++;
+
+    }
+    else if(input[i] == ')'){
+      p2counter++;
+
+    }
+  }
+  if(p1counter == p2counter){
+     
+    
+
+
+  } else{
+    cout << "Number of parenthesis not equal, therefore no match" << endl;
+
+  }
+
+
+}

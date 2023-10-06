@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+  int sum = 1;
+  int listInts[7];
+  for (int i = 0; i < 7; i++){
+    cin >> listInts[i];
+    cin.get();
+    cout << endl;
+  }
+
+  for (int i = 0; i < 7; i++){
+    if((listInts[i] % 7) == 0 || (listInts[i] % 5) == 0){
+      continue;
+    } else {
+      sum *= listInts[i];
+
+    }
+
+
+  }
+  cout << sum << endl;
+
+}
