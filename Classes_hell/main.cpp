@@ -2,6 +2,8 @@
 #include <cstring>
 #include <vector>
 #include "vid_games.h"
+#include "music.h"
+#include "movie.h"
 //remember children .h files. They themselves should reference the parent.h
 //1. Create user input functions like studentlist
 //2. Create appropriate other classes (parent media, children Videogames, Music, Movies
@@ -18,16 +20,16 @@ int main(){
   bool program = true;
   vector<media*> helpMe;
 
-  /*
+  
   char* help = new char[21];
-  strcpy(help, "die ");
-  vid_games* video = new vid_games(help, 1990, help, 8.1);
+  strcpy(help, "heeeeelp ");
+  movie* video = new movie(help, help, 1990, 160, 6.1232);
 
   cout << video->getTitle() << endl;
-  cout << video->getRating() << endl;
-  cout << video->getPublisher() << endl;
+  cout << video->getDuration() << endl;
+  // cout << video->getPublisher() << endl;
   cout << video->getYear() << endl;
-  */
+  
   while(program){
     strcpy(to_do, get_input());
     if((strcmp(to_do, "ADD")) == 0){

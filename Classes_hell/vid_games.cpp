@@ -22,5 +22,4 @@ vid_games::~vid_games(){
   delete[] title;
   delete[] publisher;
 
-
 }

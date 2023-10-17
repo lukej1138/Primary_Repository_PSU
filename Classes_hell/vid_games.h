@@ -1,6 +1,9 @@
+#ifndef VID_GAMES_H
+#define VID_GAMES_H
 #include <iostream>
 #include <cstring>
 #include "media.h"
+
 using namespace std;
 
 class vid_games : public media {
@@ -15,3 +18,5 @@ class vid_games : public media {
 
 
 };
+
+#endif
