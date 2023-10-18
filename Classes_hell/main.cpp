@@ -11,6 +11,7 @@
 using namespace std;
 
 char* get_input();
+void add_func(vector<media*> v);
 
 int main(){
   //use code from studentList, running a while loop for the duration of
@@ -20,7 +21,7 @@ int main(){
   bool program = true;
   vector<media*> helpMe;
 
-  
+  /*  
   char* help = new char[21];
   strcpy(help, "heeeeelp ");
   movie* video = new movie(help, help, 1990, 160, 6.1232);
@@ -29,10 +30,11 @@ int main(){
   cout << video->getDuration() << endl;
   // cout << video->getPublisher() << endl;
   cout << video->getYear() << endl;
-  
+  */
   while(program){
     strcpy(to_do, get_input());
     if((strcmp(to_do, "ADD")) == 0){
+      add_func(helpMe);
 
     }
     else if((strcmp(to_do, "SEARCH")) == 0){
@@ -43,6 +45,10 @@ int main(){
     }
     else {
       program = false;
+      for(vector<media*>::iterator it = helpMe.begin(); it != helpMe.end(); it++){
+	delete (*it);
+
+      }
     }
 
   }
@@ -65,6 +71,61 @@ char* get_input(){
     valid_input = true;
   }
   return input;
+
+
+}
+
+void add_func(vector<media*> v){
+  char input[21];
+  cout << "Please input the type of media you'd like to add (MUSIC, GAME, MOVIE)" << endl;
+  cin.get(input, 20);
+  cin.get();
+  if((strcmp(input, "MUSIC")) == 0){
+    char* title = new char[21];
+    char* artist = new char[21];
+    int year;
+    int duration;
+    char* publisher = new char[21];
+    char titl[21];
+    char artis[21];
+    char publish[21];
+
+    cout << "Please input the song's title (20 characters max)" << endl;
+    cin.get(titl, 20);
+    cin.get();
+    strcpy(title, titl);
+    cout << endl;
+
+    cout<< "Please input the artist (20 characters max)" << endl;
+    cin.get(artis, 20);
+    cin.get();
+    strcpy(artist, artis);
+    cout << endl;
+
+    cout << "Please input a release year" << endl;
+    cin >> year;
+    cin.get();
+    cout << endl;
+
+    cout << "Please input the song's duration in seconds" << endl;
+    cin >> duration;
+    cin.get();
+    cout << endl;
+
+    cout << "Please input the song's publisher (20 characters max)" << endl;
+    cin.get(publish, 20);
+    cin.get();
+    strcpy(publisher, publish);
+    cout << endl;
+
+    music* song = new music(title, artist, year, duration, publisher);
+    v.push_back(song);
+
+    delete publisher;
+    delete artist;
+    delete title;
+
+  }
 
 
 }
