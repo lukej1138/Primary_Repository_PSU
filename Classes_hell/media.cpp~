@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+
+media::media(int year, char* title[21]){
+  this->year = year;
+  strcpy(this->title, title);
+
+}
+
+char* media::getTitle(){
+  return title;
+}
+
+int media::getYear(){
+  return year;
+
+}

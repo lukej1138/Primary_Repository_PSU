@@ -1,21 +1,27 @@
+/*
+  Lucas Johnson
+  10/23/23
+  Main File that runs all code and associated classes.
+  Program itself allows the search, addition, and removal of media files and its children.
+ */
+
+//Includes
 #include <iostream>
 #include <cstring>
 #include <vector>
 #include "vid_games.h"
 #include "music.h"
 #include "movie.h"
-//remember children .h files. They themselves should reference the parent.h
-//1. Create user input functions like studentlist
-//2. Create appropriate other classes (parent media, children Videogames, Music, Movies
-//3. Create ADD, SEARCH, DELETE functions. Look over rule of three for delete.
 using namespace std;
 
+//List of functions
 char* get_input();
 void add_func(vector<media*> &v);
 void search_func(vector<media*> &v);
 void del_func(vector<media*> &v);
 
 int main(){
+  //Reused from my studentList project, essentially a while loop that gets input and runs until the user inputs QUIT
   char* to_do = new char[11];
   bool program = true;
   vector<media*> helpMe;
@@ -23,6 +29,8 @@ int main(){
 
   while(program){
     strcpy(to_do, get_input());
+    //Uses strcmp to determine what keyword was used. Appropriate
+    //functio is run from their.
     if((strcmp(to_do, "ADD")) == 0){
       add_func(helpMe);
 
@@ -35,10 +43,12 @@ int main(){
       del_func(helpMe);
     }
     else {
+      //Breaks the loop by changing program variable
+      //Uses iterator to run through vector and delete all pointers.
+      //Class destructors delete appropriate items on the heap
       program = false;
       for(vector<media*>::iterator it = helpMe.begin(); it != helpMe.end(); it++){
 	delete (*it);
-
       }
     }
 
@@ -47,13 +57,14 @@ int main(){
   
 }
 
+//Gets input, checks to make sure its a keyword, and shoots it to main
 char* get_input(){
   char* input = new char[11];
   bool valid_input = false;
   while(valid_input == false){
     cout << "Please choose to either add, search, or delete media with the keywords ADD, SEARCH, or DELETE. Or quit with the keyword QUIT" << endl;
     cin.get(input, 10);
-    cin.get();
+    cin.ignore(10, '\n');
     cout << endl;
     if((strcmp(input, "ADD")) != 0 && (strcmp(input, "SEARCH")) != 0 && (strcmp(input, "DELETE")) != 0 && (strcmp(input, "QUIT")) != 0){
       cout << "Please enter a valid input." << endl;
@@ -66,12 +77,15 @@ char* get_input(){
 
 }
 
+//Determines the type of media before requesting the proper information and
+//creating a new object of the correct class
+//Finally, adds this child object to the vector (which stores the parent)
 void add_func(vector<media*> &v){
   char input[21];
   cout << "Please input the type of media you'd like to add (MUSIC, GAME, MOVIE)" << endl;
   cout << "Please only input up to 20 characters for all inputs" << endl;
   cin.get(input, 20);
-  cin.get();
+  cin.ignore(20, '\n');
   cout << endl;
   if((strcmp(input, "MUSIC")) == 0){
     char* title = new char[21];
@@ -190,13 +204,15 @@ void add_func(vector<media*> &v){
 
 
       } else {
+    //Default response
 	cout << "Sorry, that wasn't a valid option" << endl;
 
       }
 
 
 }
-
+//Gets the name(title) of the media and looks through the vector.
+//Creates a vector of all matches to the title and prints out the vector.
 void search_func (vector<media*> &v){
       char* input = new char[21];
       char inpu[21];
@@ -214,6 +230,7 @@ void search_func (vector<media*> &v){
 
       }
       if(v2.size() == 0){
+	//If there are no hits
 	cout << "Sorry, we found no matches based on your input" << endl; 
 
       } else
@@ -229,21 +246,21 @@ void search_func (vector<media*> &v){
 
     }
 
+//Takes user input for the title of the media that should be deleted
+//Runs through and checks if the title is in the vector. If it is, the user must confirm and the obj will be deleted.
 void del_func(vector<media*> &v){
   char* input = new char[21];
   char inpu[21];
   cout << "Please input the title of the media you want to delete" << endl;
-  cin.get(inpu, 20);
-  cin.get();
+  cin.getline(inpu, 20);
   strcpy(input, inpu);
   cout << endl;
 
   for(vector<media*>::iterator it = v.begin(); it != v.end(); it++){
     if((strcmp(input, (*it)->getTitle())) == 0){
       cout << "Are you sure you want to delete " << (*it)->getTitle() << "? (y/n)" << endl;
-      char newInput[2];
-      cin.get(newInput, 1);
-      cin.get();
+      char newInput[3];
+      cin.getline(newInput, 2);
       if((strcmp(newInput, "y")) == 0){
 	delete *it;
         v.erase(it);
@@ -253,4 +270,5 @@ void del_func(vector<media*> &v){
 
   }
 
+}
 }

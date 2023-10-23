@@ -1,0 +1,17 @@
+#include <iostream>
+using namespace std;
+
+class media {
+ public:
+  media(int year, char* title[21]);
+  char getTitle();
+  int getYear();
+
+
+ protected:
+  char* title[21];
+  int year;
+  
+
+
+}
