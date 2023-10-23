@@ -240,11 +240,15 @@ void del_func(vector<media*> &v){
 
   for(vector<media*>::iterator it = v.begin(); it != v.end(); it++){
     if((strcmp(input, (*it)->getTitle())) == 0){
-      v.erase(it);
-      delete *it;
-      cout << "Media has been deleted!" << endl;
-      return;
-
+      cout << "Are you sure you want to delete " << (*it)->getTitle() << "? (y/n)" << endl;
+      char newInput[2];
+      cin.get(newInput, 1);
+      cin.get();
+      if((strcmp(newInput, "y")) == 0){
+	delete *it;
+        v.erase(it);
+        cout << "Media has been deleted!" << endl;
+        return;
     }
 
   }

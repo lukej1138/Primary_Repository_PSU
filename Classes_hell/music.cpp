@@ -26,6 +26,5 @@ char* music::getPublisher(){
 music::~music(){
   delete[] arti;
   delete[] publisher;
-  delete[] title;
 
 }

@@ -24,5 +24,5 @@ float movie::getRating(){
 
 movie::~movie(){
   delete[] direct;
-  delete[] title;
+
 }

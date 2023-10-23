@@ -18,3 +18,8 @@ int media::getYear(){
   return year;
 
 };
+
+media::~media(){
+  delete[] title;
+
+}
