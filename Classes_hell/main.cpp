@@ -214,9 +214,15 @@ void add_func(vector<media*> &v){
 //Gets the name(title) of the media and looks through the vector.
 //Creates a vector of all matches to the title and prints out the vector.
 void search_func (vector<media*> &v){
-      char* input = new char[21];
-      char inpu[21];
-      vector<media*> v2;
+  cout << "Would you like to search by title or year? (TITLE/YEAR)" << endl;
+  char stInput[21];
+  cin.get(stInput, 20);
+  cin.get();
+  char* input = new char[21];
+  int yrInput;
+  char inpu[21];
+  vector<media*> v2;
+  if((strcmp(stInput, "TITLE")) == 0){
       cout << "Please input the title (exactly) of the piece of media you want to look for" << endl;
       cin.get(inpu, 20);
       cin.get();
@@ -240,7 +246,30 @@ void search_func (vector<media*> &v){
 	    cout << "Title: " << (*it)->getTitle() << ", Year released: " << (*it)->getYear() << endl;
 	  }
 	}
+  } else if((strcmp(stInput, "YEAR")) == 0){
+    cout << "Please input the exact year of release for the media" << endl;
+    cin >> yrInput;
+    cin.get();
+    cout << endl;
 
+    for(vector<media*>::iterator it = v.begin(); it != v.end(); it++){
+      if(yrInput == (*it)->getYear()){
+	v2.push_back(*it);
+      }
+    }
+    if(v2.size() == 0){
+      cout << "sorry, we couldn't find any matches with that year" << endl;
+    }
+    else{
+      for(vector<media*>::iterator it = v2.begin(); it != v2.end(); it++){
+	cout << "Title: " << (*it)->getTitle() << ", Year released: " << (*it)->getYear() << endl;
+
+      }
+
+    }
+
+
+  }
       
 
 
@@ -249,26 +278,63 @@ void search_func (vector<media*> &v){
 //Takes user input for the title of the media that should be deleted
 //Runs through and checks if the title is in the vector. If it is, the user must confirm and the obj will be deleted.
 void del_func(vector<media*> &v){
-  char* input = new char[21];
-  char inpu[21];
-  cout << "Please input the title of the media you want to delete" << endl;
-  cin.getline(inpu, 20);
-  strcpy(input, inpu);
+  char stInput[21];
+  cout << "would you like to delete by year or title? (YEAR/TITLE)" << endl;
+  cin.get(stInput, 20);
+  cin.get();
   cout << endl;
+  if((strcmp(stInput, "TITLE")) == 0){
+    char* input = new char[21];
+    char inpu[21];
+    cout << "Please input the title of the media you want to delete" << endl;
+    cin.getline(inpu, 20);
+    strcpy(input, inpu);
+    cout << endl;
 
-  for(vector<media*>::iterator it = v.begin(); it != v.end(); it++){
-    if((strcmp(input, (*it)->getTitle())) == 0){
-      cout << "Are you sure you want to delete " << (*it)->getTitle() << "? (y/n)" << endl;
-      char newInput[3];
-      cin.getline(newInput, 2);
-      if((strcmp(newInput, "y")) == 0){
-	delete *it;
-        v.erase(it);
-        cout << "Media has been deleted!" << endl;
-        return;
+    for(vector<media*>::iterator it = v.begin(); it != v.end(); it++){
+      if((strcmp(input, (*it)->getTitle())) == 0){
+        cout << "Are you sure you want to delete " << (*it)->getTitle() << "? (y/n)" << endl;
+        char newInput[3];
+        cin.getline(newInput, 2);
+        if((strcmp(newInput, "y")) == 0){
+	  delete *it;
+          v.erase(it);
+          cout << "Media has been deleted!" << endl;
+          return;
     }
+	else {
+	  continue;
+	}
 
   }
 
 }
+  }
+  else if((strcmp(stInput, "YEAR")) == 0){
+    int input2;
+    cout << "Please input the year of release for the media" << endl;
+    cin >> input2;
+    cin.get();
+    cout << endl;
+
+    for(vector<media*>::iterator it = v.begin(); it != v.end(); it++){
+      if(input2 == (*it)->getYear()){
+	char input3[10];
+	cout << "Are you sure you want to delete " << (*it)->getTitle() << "? (y/n)" << endl;
+	cin.get(input3, 9);
+	cin.get();
+	if((strcmp(input3, "y")) == 0){
+	  delete *it;
+	  v.erase(it);
+	  cout << "Media had been deleted!" << endl;
+	  return;
+	} else{
+	  continue;
+	}
+
+      }
+
+    }
+
+  }
 }
