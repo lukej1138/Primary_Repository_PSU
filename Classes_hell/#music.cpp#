@@ -1,7 +1,7 @@
 /*Lucas Johnson
   10/23/23
-  Music cpp file
-*/
+  Music cpp file for each thing.
+ */
 #include <iostream>
 #include <cstring>
 #include "music.h"
