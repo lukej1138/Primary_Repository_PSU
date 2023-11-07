@@ -16,15 +16,16 @@ void setMapExitsUp(map<char*, int>* &mp, room* north, room* south, room* east, r
 
 int main(){
   map<int, char*>* rmItems1 = new map<int, char*>();
-  setrmItems(rmItems1, 0, nullptr);
+  char* scrolls = new char[21];
+  strcpy(scrolls, "scroll");
+  setrmItems(rmItems1, 1, scrolls);
   char* name1 = new char[21];
   strcpy(name1, "castle entrance");
   char* rmdescription1 = new char[801];
   strcpy(rmdescription1, "You start your adventure at the entrance of a mighty castle, riddled with mysteries. Past the drawbridge (lowered) is a mudroom.");
   room* castleEntrance = new room(name1, rmItems1, 1, nullptr, rmdescription1);
   cout << castleEntrance->getId() << endl;
-  castleEntrance->printItems(rmItems1);
-
+  castleEntrance->printItems();
 
   
 }
