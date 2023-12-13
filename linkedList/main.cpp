@@ -84,7 +84,7 @@ int main(){
       int counter = 0;
       node* current = mainNode;
       average(counter, total, current);
-      cout << "Average of all GPAs: " << total << endl;
+      cout << "Average of all GPAs: " << fixed << setprecision(2) << total << endl;
 
     }
 
@@ -141,18 +141,15 @@ void add(node* &mainNode, node* &newNode, node* &current, node* &previous){
 	 doMiddlePlace = true;
        }
        if(current != mainNode && doMiddlePlace == true){
-	 cout << "1" << endl;
 	 newNode->setNode(current);
 	 previous->setNode(newNode);
        }
        else if(current == mainNode && doMiddlePlace == true){
-	 cout << "2" << endl;
 	 node* temp = mainNode;
 	 mainNode = newNode;
 	 newNode->setNode(temp);
        }
        else if(doMiddlePlace == false){
-	 cout << "3" << endl;
 	 current->setNode(newNode);
        }
        return;
