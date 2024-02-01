@@ -3,6 +3,7 @@
 #include <vector>
 #include <iomanip>
 #include "node.h"
+#include <fstream>
 /*                                           
   Lucas Johnson                                    
   9/20/23                                           
@@ -20,15 +21,43 @@ node* add_func();
 void del_func(node* list[], int size);
 void prnt_func(node* list[], int size);
 bool hash_sadge(node* &thing, node* list[], int &size);
-bool rehash(node* list[], int &size);
+node** rehash(node* list[], int &size, bool &rehashCheck);
 
 int main(){
   int size = 100;
-  node* da_list[size];
+  node** da_list = new node*[size];
 
   for(int i = 0; i< size; i++){
     da_list[i] = NULL;
   }
+
+  fstream fin;
+  fin.open("firstNames");
+
+  vector<char*> firstN;
+
+  char* input = new char[20];
+  while(fin >> input){
+    char* temp = new char[20];
+    strcpy(temp, input);
+    firstN.push_back(temp);
+  }
+  fin.close();
+
+  fstream fin1;
+  fin1.open("lastNames");
+  vector<char*> lastN;
+  char* input1 = new char[20];
+  while(fin >> input){
+    char* temp1 = new char[20];
+    strcpy(temp1, input1);
+    cout << temp1 << endl;
+    lastN.push_back(temp1);
+  }
+
+
+
+  
   bool programRunning = true;
   //Create input cstring, as well as loop that runs while program is active                        
   char* to_do = new char[11];
@@ -41,7 +70,8 @@ int main(){
       bool rehash1 = hash_sadge(thingy, da_list, size);
       if(rehash1){
 	while(true){
-	  bool checker = rehash(da_list, size);
+	  bool checker = false;
+	  da_list = rehash(da_list, size, checker);
 	  if(checker == false){
 	    break;
 	  }
@@ -114,13 +144,47 @@ void del_func(node* da_list[], int size){
   cout << "What's the id of the student you want to delete?" << endl;
   cin >> find_id;
   cin.get();
+  int sum = find_id % size;
   for(int i = 0; i < size; i++){
-    if(find_id == da_list[i]->getStudent()->getId()){
-      node* temp = da_list[i];
-      da_list[i] = da_list[i]->getNode();
-      delete temp;
-      cout << "Successfully deleted student" << endl;
-      return;
+    if(da_list[i] == NULL){
+      continue;
+    }
+    if(sum  == (da_list[i]->getStudent()->getId() % size)){
+      node* current = da_list[i];
+      node* previous = da_list[i];
+      while(true){
+	if(current->getStudent()->getId() == find_id){
+	  cout << "found ID" << endl;
+	  if(current == da_list[i]){
+	    cout << "delete head node" << endl;
+	    if(current->getNode() != NULL){
+	      node* temp = current->getNode();
+	      da_list[i] = temp;
+	    }
+	    else{
+	      da_list[i] = NULL;
+	    }
+	    cout << "Node deleted" << endl;
+	    delete current;
+	  }
+	  else if(current->getNode() != NULL){
+	    node* temp = current->getNode();
+	    previous->setNode(temp);
+	    delete current;
+	  }
+	  else{
+	    delete current;
+	  }
+	  cout << "Node deleted" << endl;
+	  return;
+	}
+	else{
+	  if(current != da_list[i]){
+	    previous = previous->getNode();
+	  }
+	  current = current->getNode();
+	}
+      }
     }
   }
   cout << "Sorry, we couldn't find that student in our directory." << endl;
@@ -129,7 +193,6 @@ void del_func(node* da_list[], int size){
 void prnt_func(node* da_list[], int size){
   for(int i = 0; i < size; i++){
     if(da_list[i] != NULL){
-      //GET THRU NODES
       bool notDone = true;
       node* current = da_list[i];
       while(notDone){
@@ -152,12 +215,14 @@ void prnt_func(node* da_list[], int size){
 bool hash_sadge(node* &thing, node* alist[], int &size){
   int sum = thing->getStudent()->getId();
  
-  cout << size << endl;
+  cout << "Size: " <<  size << endl;
 
   sum = sum % (size);
   cout << sum << endl;
 
+  cout << "Remainder: " << sum << endl;
   if(alist[sum] == NULL){
+    cout << "first spot filled" << endl;
     alist[sum] = thing;
   }
   else{
@@ -167,13 +232,13 @@ bool hash_sadge(node* &thing, node* alist[], int &size){
     while(notEnd){
       cout << "current position " << position << endl;
       if(current->getNode() != NULL && position < 3){
+	cout << "Moving forward one node" << endl;
 	current = current->getNode();
 	position++;
       }
       else{
-	cout << "here" << endl;
 	current->setNode(thing);
-	cout << "here2" << endl;
+	cout << current->getStudent()->getName() << "Linked to " << current->getNode()->getStudent()->getName() << endl;
 	cout << position << endl;
 	if(position == 3){
 	  return true;
@@ -191,24 +256,20 @@ bool hash_sadge(node* &thing, node* alist[], int &size){
     }
 
 
-  
-  //get ascii num
-  //check if spot isn't empty
-  //if is, fill
-  //if not AND haven't added twice, add
-  //else rehash
+  return false;
 }
 
-bool rehash(node* da_list[], int &size){
+node** rehash(node* da_list[], int &size, bool &rehashCheck){
+  int temporarySize = size;
   size *= 2;
-  node* temp[size];
+  node** temp = new node*[size];
 
   for(int i = 0; i < size; i++){
     temp[i] = NULL;
   }
   bool needRehash = false;
   //Use recursion, loop thru og list, using for loop to get ascii val, then put into new list.
-  for(int i = 0; i < size; i++){
+  for(int i = 0; i < temporarySize; i++){
     if(da_list[i] != NULL){
       while(true){
 	node* getLast = da_list[i];
@@ -224,30 +285,25 @@ bool rehash(node* da_list[], int &size){
 	    break;
 	  }
 	}
-	bool check = hash_sadge(getLast, temp, size);
-	cout << "right before previous" << endl;
-	previous->setNode(NULL);
 	getLast->setNode(NULL);
-	cout << "WE GOT OUT" << endl;
+	previous->setNode(NULL);
+	bool check =
+	  hash_sadge(getLast, temp, size);
 	if(check == true){
-	  cout << "we are rehashing" << endl;
-	  needRehash = true;
+	  rehashCheck = true;
 	}
 	if(previous == da_list[i]){
-	  cout << "Got in prev" << endl;
 	  check = hash_sadge(previous, temp, size);
+	  da_list[i] = NULL;
 	  if(check){
-	    needRehash = true;
+	    rehashCheck = true;
 	  }
 	  break;
 	}
   }
 }
   }
-  if(needRehash){
-    return true;
-  }
-  return false;
+  return temp;
 }
 
 
