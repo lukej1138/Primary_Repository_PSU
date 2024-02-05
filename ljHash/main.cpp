@@ -8,15 +8,15 @@
 #include <time.h>
 /*                                           
   Lucas Johnson                                    
-  9/20/23                                           
-  Creates a program that stores inputted students, as well as prints/deletes them.                                              
+  2/5/24                                           
+  Creates a Table ADT that is able to get/input different values with keys. Uses chaining to sort collisions.
  */
 
 
 using namespace std;
 
 
-//Struct used when making a student                                                                                                                                                              
+
 //All functions                                                              
 char* valid_input();
 node* add_func(int id=0, char* name = NULL, float gpa = 0.0);
@@ -25,17 +25,17 @@ void prnt_func(node** list, int size);
 bool hash_sadge(node* &thing, node** list, int &size);
 node** rehash(node** list, int &size, bool &rehashCheck);
 char* getFullName(vector<char*> first, vector<char*> last);
-void fullADD(int id, char* name, float gpa, int &size, node** list);
+void fullADD(int id, char* name, float gpa, int &size, node** &list);
 
 int main(){
+  //Initial size/list created. Use a double pointer, meaning a pointer to an array of pointers
   srand(time(NULL));
   int size = 100;
   node** da_list = new node*[size];
-
   for(int i = 0; i< size; i++){
     da_list[i] = NULL;
   }
-
+  //Get values from each file, see folder for specifics.
   fstream fin;
   fin.open("firstNames");
   vector<char*> firstN;
@@ -57,7 +57,7 @@ int main(){
     lastN.push_back(temp1);
   }
   newFile.close();
-
+  //Sets the initial id for the RAND function
   int id = 100000;
 
 
@@ -66,12 +66,17 @@ int main(){
   //Create input cstring, as well as loop that runs while program is active                        
   char* to_do = new char[11];
   while(programRunning){
-    //calls valid input to get user input, copying it/overwriting to_do                                                                                                                                     
+
+    //Gets user input, overwriting to_do each time it does.
     strcpy(to_do, valid_input());
-    //determines the users input, runs appropriate function                                                                                                                                                 
+    //determines the users input, runs appropriate function                                                                                                   //Determines what to do                                              
     if((strcmp(to_do, "ADD")) == 0){
+      //Runs the add_func() to get the node* to add
       node* thingy = add_func();
+      //Checks if we need to rehash after we hash the value in
       bool rehash1 = hash_sadge(thingy, da_list, size);
+      //If we do need to rehash, this loop keeps running as long as we need to
+      //keep rehashing
       if(rehash1){
 	while(true){
 	  bool checker = false;
@@ -91,6 +96,7 @@ int main(){
     } else if((strcmp(to_do, "QUIT")) == 0){
       programRunning = false;
     } else if((strcmp(to_do, "RAND")) == 0){
+      //Gets input, then continuously creates and adds students, rehashing/sorting as it goes
       int input = 0;
       cout << "How many students you want (under 500 por favor)" << endl;
       cin >> input;
@@ -104,7 +110,7 @@ int main(){
     }
   }
 }
-
+//Gets correct input
 char* valid_input(){
   cout << endl;
   char* input = new char[11];
@@ -126,8 +132,8 @@ char* valid_input(){
   return input;
 }
 
-//When user chooses to add a player, this function asks them for all essential elements to make a new student struct variable                                                                               
-//Once created, the student variable is stored in the vector made in main.                                                                                                                                  
+
+//Add function simply creates and returns the node to be used for hashing
 node* add_func(int id1, char* name0, float gpa1){
   if(id1 != 0){
     student* stu1 = new student(id1, gpa1, name0);
@@ -159,6 +165,7 @@ node* add_func(int id1, char* name0, float gpa1){
   
 
 }
+//Runs through every index and node to determine the correct node to delete
 void del_func(node** da_list, int size){
   int find_id = 0;
   cout << "What's the id of the student you want to delete?" << endl;
@@ -186,17 +193,24 @@ void del_func(node** da_list, int size){
 	    }
 	    cout << "Node deleted" << endl;
 	    delete current;
+	    return;
 	  }
 	  else if(current->getNode() != NULL){
+	    cout << "Deleting node middle of list" << endl;
 	    node* temp = current->getNode();
 	    previous->setNode(temp);
 	    delete current;
+	    return;
 	  }
 	  else{
+	    cout << "Delete at end of list" << endl;
 	    delete current;
+	    previous->setNode(NULL);
+	    return;
 	  }
-	  cout << "Node deleted" << endl;
-	  return;
+	}
+	else if(current->getNode() == NULL && current->getStudent()->getId() != find_id){
+	  break;
 	}
 	else{
 	  if(current != da_list[i]){
@@ -205,6 +219,7 @@ void del_func(node** da_list, int size){
 	  current = current->getNode();
 	}
       }
+      break;
     }
   }
   cout << "Sorry, we couldn't find that student in our directory." << endl;
@@ -231,24 +246,14 @@ void prnt_func(node** da_list, int size){
 
 
 
-//ERROR: For some reason, first node->getNext() isn't working, may not have been set up correctly.
+//Get's the id, determines it proper index by % size, runs through the list. Once the correct spot is found, check for head node/chain. Add accordingly.
 bool hash_sadge(node* &thing, node** alist, int &size){
-  int sum = thing->getStudent()->getId();
+  int id = thing->getStudent()->getId();
  
-  cout << "Size: " <<  size << endl;
 
-  sum = sum % (size);
-  cout << sum << endl;
+  int sum = id % size;
 
-  if(alist[100] != NULL){
-    cout << "THIS IS THE 100TH THINGY" << endl;
-    cout << alist[100];
-
-  }
-
-  cout << "Remainder: " << sum << endl;
   if(alist[sum] == NULL){
-    cout << "first spot filled" << endl;
     alist[sum] = thing;
   }
   else{
@@ -256,46 +261,34 @@ bool hash_sadge(node* &thing, node** alist, int &size){
     bool notEnd = true;
     int position = 1;
     while(notEnd){
-      cout << "current position " << position << endl;
-      cout << current << endl;
-      
       if(current->getNode() != NULL && position < 3){
-	cout << "Moving forward one node" << endl;
 	current = current->getNode();
 	position++;
       }
       else{
 	current->setNode(thing);
-	cout << current->getStudent()->getName() << "Linked to " << current->getNode()->getStudent()->getName() << endl;
-	cout << position << endl;
 	if(position == 3){
 	  return true;
 	}
 	else{
 	  return false;
-
 	}
-	
-
       }   
-
       }
 
     }
-
-
   return false;
 }
-
+//The reason I need therapy
+//Makes a new list, five times the size of the previous. Hashes all previous values into this new list.
+//Set "global" list equal to this new temp list
 node** rehash(node** da_list, int &size, bool &rehashCheck){
-  int temporarySize = size;
   size *= 5;
+  int temporarySize = size / 5;
   node** temp = new node*[size];
-
   for(int i = 0; i < size; i++){
     temp[i] = NULL;
   }
-  cout << temp[100] << endl;
   bool needRehash = false;
   //Use recursion, loop thru og list, using for loop to get ascii val, then put into new list.
   for(int i = 0; i < temporarySize; i++){
@@ -314,33 +307,20 @@ node** rehash(node** da_list, int &size, bool &rehashCheck){
 	    break;
 	  }
 	}
-	getLast->setNode(NULL);
 	previous->setNode(NULL);
-	cout << "CALLING REHASH VERSION OF HASH" << endl;
-	bool check =
-	  hash_sadge(getLast, temp, size);
-
-	if(temp[100] != NULL){
-	  cout << "THIS IS THE 100TH SPOT" << endl;
-	  cout << temp[100] << endl;
-	}
+	bool check = hash_sadge(getLast, temp, size);
 	if(check == true){
 	  rehashCheck = true;
 	}
-	if(previous == da_list[i]){
-	  check = hash_sadge(previous, temp, size);
-	  da_list[i] = NULL;
-	  if(check){
-	    rehashCheck = true;
-	  }
-	  break;
+	break;
 	}
   }
 }
-  }
   return temp;
-}
+  }
 
+
+//Generates a random name from the two vectors of names
 char* getFullName(vector<char*> first, vector<char*> last){
   int firstI = rand() % 50;
   int lastI = rand() % 50;
@@ -353,24 +333,23 @@ char* getFullName(vector<char*> first, vector<char*> last){
   full[i++] = ' ';
 
   int j = 0;
-  int combined = strlen(first[firstI]) + strlen(last[lastI]);
+  int combined = strlen(first[firstI]) + strlen(last[lastI]) + 1;
   for(; i < combined; i++){
     full[i] = (last[lastI])[j];
     j++;
+
   }
   full[combined] = '\0';
 
   return full;
 
 }
-
-void fullADD(int id, char* name, float gpa, int &size, node** da_list){
+//Pretty much just my above add if statement in a function. Run for every student.
+void fullADD(int id, char* name, float gpa, int &size, node** &da_list){
   node* thingy = add_func(id, name, gpa);
   bool rehash1 = hash_sadge(thingy, da_list, size);
   if(rehash1){
-    //REMOVE THIS LOOP AND DON"T USE THE BOOLEAN IN REHASH. JUST CHECK NORMALLY
-      bool checker = false;
-      da_list = rehash(da_list, size, checker);
+    bool checker = false;
+    da_list = rehash(da_list, size, checker);
   }
 }
-`
