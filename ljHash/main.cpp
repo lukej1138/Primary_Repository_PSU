@@ -316,6 +316,8 @@ node** rehash(node** da_list, int &size, bool &rehashCheck){
 	}
   }
 }
+  node** temp1 = da_list;
+  delete temp1;
   return temp;
   }
 
