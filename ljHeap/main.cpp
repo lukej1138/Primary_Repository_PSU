@@ -88,6 +88,7 @@ int main(){
     else if(strcmp(to_do, "DELETE") == 0){
       //Deletes the head, reorganizes the list.
       int endI = getToEnd(da_list);
+      cout << da_list[1] << endl;
       da_list[1] = da_list[endI];
       da_list[endI] = -1;
       del_function(da_list, 1);
