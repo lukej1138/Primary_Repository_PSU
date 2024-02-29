@@ -50,8 +50,9 @@ void enqueue(node* &queueHead, node* thingy){
 
 node* dequeue(node* &queueHead, node* current, node* previous){
   if(current->getCenterNext() == NULL){
+    node* temp = current;
     previous->setCenterNext(NULL);
-    return current;
+    return temp;
   }
   else{
     if(current != queueHead){
