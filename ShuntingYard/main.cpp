@@ -4,7 +4,7 @@
 //Errors: Get thru stack, but stack gets empty and thingy has something to throw on; 
 
 void enqueue(node* &queueHead, node* thingyMaBob);
-node* dequeue(node* &queueHead, node* current, node* previous);
+void dequeue(node* &queueHead, node* &current, node* previous);
 void push(node* &stackHead, node* thing);
 node* pop(node* &stackHead);
 void parseInput(char* input, char arr[]);
@@ -13,8 +13,10 @@ int assignValue(char thingy);
 node* peek(node* &stackHead, node* current);
 void stackprint(node* stackhead);
 void queueprint(node* queuehead, int &i);
-void buildTree(node* queueHead, node* treeHead);
-void clearEnd(node* &queueHead, int &i);
+void buildTree(node* &queueHead, node* &treeHead);
+void printIn(node* treeHead);
+void printPost(node* treeHead);
+void printPre(node* treeHead);
 using namespace std;
 
 int main(){
@@ -22,18 +24,36 @@ int main(){
   node* stackHead = NULL;
   node* treeHead = NULL;
   bool gameRunnin = true;
+  char* input = new char[101];
+  cout << "Please provide a math equation, less than 100 characters" << endl;
+  cin.get(input, 100);
+  cin.get();
+  char arr[100];
+  parseInput(input, arr);
+  ShuntingDaYard(queueHead, stackHead, arr);
+  buildTree(queueHead, treeHead);
   while(gameRunnin){
-    char* input = new char[101];
-    cout << "Please provide a math equation, less than 100 characters" << endl;
-    cin.get(input, 100);
+    cout << "Would you like infix, postfix, or prefix (type exactly)? Type 'quit' to quit" << endl;
+    char* input1 = new char[31];
+    cin.get(input1, 30);
     cin.get();
-    char arr[100];
-    parseInput(input, arr);
-    ShuntingDaYard(queueHead, stackHead, arr);
-    // clearEnd(queueHead, size);
-    buildTree(queueHead, treeHead);
-  }
+    if((strcmp(input1, "infix")) == 0){
+      printIn(treeHead);
+      cout << endl;
+    }
+    else if((strcmp(input1, "postfix")) == 0){
+      printPost(treeHead);
+      cout << endl;
+    }
+    else if((strcmp(input1, "prefix")) == 0){
+      printPre(treeHead);
+      cout << endl;
+    }
+    else{
+      gameRunnin = false;
+    }
 
+  }
 }
 
 void enqueue(node* &queueHead, node* thingy){
@@ -48,11 +68,14 @@ void enqueue(node* &queueHead, node* thingy){
   queueHead->setCenterNext(temp);
 }
 
-node* dequeue(node* &queueHead, node* current, node* previous){
+void dequeue(node* &queueHead, node* &current, node* previous){
   if(current->getCenterNext() == NULL){
-    node* temp = current;
+    if(current == queueHead){
+      queueHead = NULL;
+      return;
+    }
     previous->setCenterNext(NULL);
-    return temp;
+    return;
   }
   else{
     if(current != queueHead){
@@ -193,22 +216,21 @@ void queueprint(node* queueHead, int &i){
     cout << "Queue is empty" <<	endl;
   }
   else{
-    cout << i << ',';
-    cout << queueHead->getVal();
+    //cout << i << ',';
+     cout << queueHead->getVal();
     i++;
     if(queueHead->getCenterNext() != NULL){
       queueprint(queueHead->getCenterNext(), i);
     }
-    cout << endl;
     return;
   }
 }
 
-void buildTree(node* queueHead, node* treeHead){
+void buildTree(node* &queueHead, node* &treeHead){
   while(queueHead != NULL){
-    node* current = queueHead;
+    node* thing = queueHead;
     node* previous = queueHead;
-    node* thing = dequeue(queueHead, current, previous);
+    dequeue(queueHead, thing, previous);
     cout << "current thingy: " << thing->getVal() << endl;
     if(isdigit(thing->getVal())){
       push(treeHead, thing);
@@ -217,8 +239,8 @@ void buildTree(node* queueHead, node* treeHead){
       node* right = pop(treeHead);
       node* left = pop(treeHead);
       cout << "now here" << endl;
-
       push(treeHead, thing);
+      cout << "this is tree head " << treeHead->getVal() << endl;
       thing->setRightNext(right);
       thing->setLeftNext(left);
   }
@@ -229,13 +251,34 @@ void buildTree(node* queueHead, node* treeHead){
 }
 }
 
-void clearEnd(node* &queueHead, int &i){
-  node* end = queueHead;
-  for(int j = 0; j < i-1; j++){
-    cout << j << endl;
-    end = end->getCenterNext();
+void printIn(node* treeHead){
+  if(treeHead->getLeftNext() != NULL){
+    printIn(treeHead->getLeftNext());
   }
-  cout << end->getVal() << endl;
-  end->setCenterNext(NULL);
+  cout << treeHead->getVal();
+  if(treeHead->getRightNext() != NULL){
+    printIn(treeHead->getRightNext());
+  }
+  return;
+}
 
+void printPost(node* treeHead){
+  if(treeHead->getLeftNext() != NULL){
+    printIn(treeHead->getLeftNext());
+  }
+  if(treeHead->getRightNext() != NULL){
+    printIn(treeHead->getRightNext());
+  }
+  cout << treeHead->getVal();
+  return;
+}
+void printPre(node* treeHead){
+  cout << treeHead->getVal();
+  if(treeHead->getLeftNext() != NULL){
+    printIn(treeHead->getLeftNext());
+  }
+  if(treeHead->getRightNext() != NULL){
+    printIn(treeHead->getRightNext());
+  }
+  return;
 }
