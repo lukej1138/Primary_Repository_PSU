@@ -12,7 +12,7 @@ void ShuntingDaYard(node* &queuehead, node* stackhead, char arr[]);
 int assignValue(char thingy);
 node* peek(node* &stackHead, node* current);
 void stackprint(node* stackhead);
-void queueprint(node* queuehead, int &i);
+void queueprint(node* queuehead);
 void buildTree(node* &queueHead, node* &treeHead);
 void printIn(node* treeHead);
 void printPost(node* treeHead);
@@ -57,8 +57,6 @@ int main(){
 }
 
 void enqueue(node* &queueHead, node* thingy){
-  cout << "in enqueue" << endl;
-  cout << "Thingy being queued: " << thingy->getVal() << endl;
   if(queueHead == NULL){
     queueHead = thingy;
     return;
@@ -135,7 +133,6 @@ void ShuntingDaYard(node* &queuehead, node* stackhead, char arr[]){
       break;
     }
     node* thingy = new node(arr[i]);
-    cout << "Current Thingy: " << thingy->getVal() << endl;
     if(isdigit(arr[i])){
       enqueue(queuehead, thingy);
     }
@@ -146,7 +143,6 @@ void ShuntingDaYard(node* &queuehead, node* stackhead, char arr[]){
       else{
 	
 	while(((stackhead->getVal()) == '+' || (stackhead->getVal()) == '-' || (stackhead->getVal()) == '*' || (stackhead->getVal()) == '/' || (stackhead->getVal()) == '^')  && ((assignValue(stackhead->getVal()) > assignValue(arr[i])) || (assignValue(stackhead->getVal()) == assignValue(arr[i]) && arr[i] != '^'))){
-	cout << "in big while" << endl;  
         enqueue(queuehead, pop(stackhead));
 	if(stackhead == NULL){
 	  break;
@@ -183,9 +179,6 @@ void ShuntingDaYard(node* &queuehead, node* stackhead, char arr[]){
 	break;
       }
     }
-    int i = 0;
-    queueprint(queuehead, i);
-
 }
 int assignValue(char thingy){
   if(thingy == '+' || thingy == '-'){
@@ -211,16 +204,14 @@ void stackprint(node* stackHead){
     return;
   }
 }
-void queueprint(node* queueHead, int &i){
+void queueprint(node* queueHead){
   if(queueHead == NULL){
     cout << "Queue is empty" <<	endl;
   }
   else{
-    //cout << i << ',';
-     cout << queueHead->getVal();
-    i++;
+    cout << queueHead->getVal();
     if(queueHead->getCenterNext() != NULL){
-      queueprint(queueHead->getCenterNext(), i);
+      queueprint(queueHead->getCenterNext());
     }
     return;
   }
@@ -231,23 +222,19 @@ void buildTree(node* &queueHead, node* &treeHead){
     node* thing = queueHead;
     node* previous = queueHead;
     dequeue(queueHead, thing, previous);
-    cout << "current thingy: " << thing->getVal() << endl;
-    if(isdigit(thing->getVal())){
+    if(isdigit(thing->getVal()) == 1){
       push(treeHead, thing);
     }
     else if(thing->getVal() == '+' || thing->getVal() == '-' || thing->getVal() == '*' || thing->getVal() == '/' || thing->getVal() == '^'){
       node* right = pop(treeHead);
       node* left = pop(treeHead);
-      cout << "now here" << endl;
       push(treeHead, thing);
-      cout << "this is tree head " << treeHead->getVal() << endl;
       thing->setRightNext(right);
       thing->setLeftNext(left);
   }
     else{
       continue;
     }
-    cout << treeHead->getVal() << endl;
 }
 }
 
@@ -264,10 +251,10 @@ void printIn(node* treeHead){
 
 void printPost(node* treeHead){
   if(treeHead->getLeftNext() != NULL){
-    printIn(treeHead->getLeftNext());
+    printPost(treeHead->getLeftNext());
   }
   if(treeHead->getRightNext() != NULL){
-    printIn(treeHead->getRightNext());
+    printPost(treeHead->getRightNext());
   }
   cout << treeHead->getVal();
   return;
@@ -275,10 +262,10 @@ void printPost(node* treeHead){
 void printPre(node* treeHead){
   cout << treeHead->getVal();
   if(treeHead->getLeftNext() != NULL){
-    printIn(treeHead->getLeftNext());
+    printPre(treeHead->getLeftNext());
   }
   if(treeHead->getRightNext() != NULL){
-    printIn(treeHead->getRightNext());
+    printPre(treeHead->getRightNext());
   }
   return;
 }
