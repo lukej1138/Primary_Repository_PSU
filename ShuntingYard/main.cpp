@@ -1,8 +1,14 @@
 #include <iostream>
 #include "node.h"
 #include <cstring>
-//Errors: Get thru stack, but stack gets empty and thingy has something to throw on; 
+/*
+  Lucas Johnson
+  3/3/24
+  Main File for shunting yard algorithm
+ */
 
+
+//Various functions
 void enqueue(node* &queueHead, node* thingyMaBob);
 void dequeue(node* &queueHead, node* &current, node* previous);
 void push(node* &stackHead, node* thing);
@@ -10,7 +16,6 @@ node* pop(node* &stackHead);
 void parseInput(char* input, char arr[]);
 void ShuntingDaYard(node* &queuehead, node* stackhead, char arr[]);
 int assignValue(char thingy);
-node* peek(node* &stackHead, node* current);
 void stackprint(node* stackhead);
 void queueprint(node* queuehead);
 void buildTree(node* &queueHead, node* &treeHead);
@@ -20,19 +25,23 @@ void printPre(node* treeHead);
 using namespace std;
 
 int main(){
+  //Sets up stacks and queue to be used throughout program
   node* queueHead = NULL;
   node* stackHead = NULL;
   node* treeHead = NULL;
   bool gameRunnin = true;
   char* input = new char[101];
+  //Gets and parses an equation from the user into an array
   cout << "Please provide a math equation, less than 100 characters" << endl;
   cin.get(input, 100);
   cin.get();
   char arr[100];
+  //Creates expression tree, changing to postfix first.
   parseInput(input, arr);
   ShuntingDaYard(queueHead, stackHead, arr);
   buildTree(queueHead, treeHead);
   while(gameRunnin){
+    //Allows a user to print out infix, postfix, or prefix of the function until they quit
     cout << "Would you like infix, postfix, or prefix (type exactly)? Type 'quit' to quit" << endl;
     char* input1 = new char[31];
     cin.get(input1, 30);
@@ -56,6 +65,7 @@ int main(){
   }
 }
 
+//Adds things to the queue
 void enqueue(node* &queueHead, node* thingy){
   if(queueHead == NULL){
     queueHead = thingy;
@@ -66,6 +76,7 @@ void enqueue(node* &queueHead, node* thingy){
   queueHead->setCenterNext(temp);
 }
 
+//Gets to the end of the queue and pops it off
 void dequeue(node* &queueHead, node* &current, node* previous){
   if(current->getCenterNext() == NULL){
     if(current == queueHead){
@@ -84,6 +95,7 @@ void dequeue(node* &queueHead, node* &current, node* previous){
   }
 }
 
+//Pops from top of stack
 node* pop(node* &stackHead){
   node* temp = stackHead;
   if(stackHead->getCenterNext() != NULL){
@@ -96,6 +108,7 @@ node* pop(node* &stackHead){
   return temp;
 }
 
+//Pushes onto stack
 void push(node* &stackHead, node* thingy){
   if(stackHead == NULL){
     stackHead = thingy;
@@ -106,7 +119,7 @@ void push(node* &stackHead, node* thingy){
   stackHead->setCenterNext(temp);
 
 }
-
+//Parses input
 void parseInput(char* input, char arr[]){
   for(int i = 0; i < strlen(input)+1; i++){
     arr[i] = input[i];
@@ -116,17 +129,7 @@ void parseInput(char* input, char arr[]){
   }
 }
 
-
-node* peek(node* &stackHead, node* current){
-  if(current->getCenterNext() == NULL){
-    return current;
-  }
-  else{
-    current = current->getCenterNext();
-    pop(stackHead);
-  }
-}
-
+//Implements the shunting yard algorithm, building the queue up to be postfix of the original expression.
 void ShuntingDaYard(node* &queuehead, node* stackhead, char arr[]){
   for(int i = 0; i < 100; i++){
     if(arr[i] == '\0'){
@@ -180,6 +183,7 @@ void ShuntingDaYard(node* &queuehead, node* stackhead, char arr[]){
       }
     }
 }
+//Assigns a value to various operators for precedence
 int assignValue(char thingy){
   if(thingy == '+' || thingy == '-'){
     return 10;
@@ -191,6 +195,8 @@ int assignValue(char thingy){
     return 30;
   }
 }
+
+//Prints stack and queue for debugging
 void stackprint(node* stackHead){
   if(stackHead == NULL){
     cout << "Stack is empty" << endl;
@@ -217,6 +223,8 @@ void queueprint(node* queueHead){
   }
 }
 
+
+//Builds the expression tree: Dequeues an item->if number push onto stack. If operator, pop two on stack and attach to operator, push it onto the stack
 void buildTree(node* &queueHead, node* &treeHead){
   while(queueHead != NULL){
     node* thing = queueHead;
@@ -238,6 +246,7 @@ void buildTree(node* &queueHead, node* &treeHead){
 }
 }
 
+//Print functions that recursively print expression tree in infix, postfix, and prefix (depending on user request)
 void printIn(node* treeHead){
   if(treeHead->getLeftNext() != NULL){
     printIn(treeHead->getLeftNext());

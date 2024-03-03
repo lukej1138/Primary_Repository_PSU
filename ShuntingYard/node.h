@@ -1,3 +1,9 @@
+/*
+  Lucas Johnson
+  3/3/2024
+  Header file for node clas
+ */
+
 
 //Implemention of a header guard for header file
 #ifndef NODE_H

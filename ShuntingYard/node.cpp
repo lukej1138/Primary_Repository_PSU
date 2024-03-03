@@ -1,5 +1,12 @@
+/*
+  Lucas Johnson
+  3/3/2024
+  CPP file for node class
+ */
+
 //imports
 #include "node.h"
+
 
 //Constructor for node class
 node::node(char val) {
