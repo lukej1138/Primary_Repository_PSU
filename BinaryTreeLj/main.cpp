@@ -81,8 +81,6 @@ int main(){
       cin.get();
       node* previous = head;
       delTree(head, previous, input);
-      cout << "WE DID IT!!!" << endl;
-
     }
   }
 
@@ -189,14 +187,11 @@ void delTree(node* head, node* previous, int thingy){
     }
   }
   else{
-    cout << "Found a match" << endl;
-    cout << "Current Head: " << head->getVal() << endl;
     if(head->getLeftNext() != NULL && head->getRightNext() != NULL){
       node* temp = previous;
       previous = head;
       node* predecessor = delTree2(head->getRightNext(), previous, head->getVal());
       previous = temp;
-      cout << "Predecessor Found " << predecessor->getVal() << endl;
       head->setVal(predecessor->getVal());
       delete predecessor;
     }
@@ -220,8 +215,6 @@ void delTree(node* head, node* previous, int thingy){
       }
     }
     else if(head->getRightNext() != NULL){
-      cout << "HERE" << endl;
-      cout << "previous: " << previous->getVal() << endl;
       if(previous == head){
 	previous->setVal(previous->getRightNext()->getVal());
 	node* temp = previous->getRightNext();
