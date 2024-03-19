@@ -1,0 +1,45 @@
+/*
+  Lucas Johnson
+  3/3/2024
+  CPP file for node class
+ */
+
+//imports
+#include "node.h"
+
+
+//Constructor for node class
+node::node(int val) {
+  //Assign node's student based on construction parameter
+  val1 = val;
+
+  //Set the next node to null (will need to set node later)
+  nextNodeL = NULL;
+  nextNodeR = NULL;
+}
+
+//Getter function for Node's held student
+int node::getVal() {
+  return val1;
+}
+
+//Setter function for Node's next node link
+void node::setLeftNext(node* newNext) {
+  nextNodeL = newNext;
+}
+
+void node::setRightNext(node* newNext) {
+  nextNodeR = newNext;
+}
+
+//Getter function for Node's next node link
+node* node::getLeftNext() {
+  return nextNodeL;
+}
+node* node::getRightNext() {
+  return nextNodeR;
+}
+
+void node::setVal(int val){
+  val1 = val;
+}
