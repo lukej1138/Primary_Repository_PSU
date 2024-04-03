@@ -1,6 +1,6 @@
 /*
   Lucas Johnson
-  3/19/2024
+  4/3/2024
   Header file for node clas
  */
 
@@ -19,7 +19,7 @@ class node {
  public:
   //constructor
   node(int val, int col);
-  //getters and setters for each next node/value
+  //getters and setters for next nodes, parent, color, and value
   int getVal();
   void setLeftNext(node* newNext);
   void setRightNext(node* newNext);

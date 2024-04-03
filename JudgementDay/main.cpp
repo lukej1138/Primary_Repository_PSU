@@ -1,7 +1,7 @@
 /*
   Lucas Johnson
-  Binar Expression Tree Main Function
-  3/18/23
+  Red Black Tree Main Function
+  4/3/2024
  */
 //1 = RED;
 //0 = BLACK;
@@ -95,7 +95,7 @@ void printTree(node* head, int count){
   }
 }
 
-//Go left/right by comparing the current "Head" with node being added. Keep going until at the end
+//Go left/right by comparing the current "Head" with node being added. Keep going until at the end. Returns the head node to be used for rebalancing in following function.
 node* addTree(node* &head, node* thingy){
   if(head == NULL){
     head = thingy;
@@ -157,6 +157,7 @@ bool findChildSide(node* Gparent, node* head){
   return false;
 }
 
+//For when uncle is red and parent is read. Recolors such that Gparent is red, head/uncle become black. Rerun's all checks on Gparent again.
 void Case3(node* &root, node* &Gparent, node* &uncle, node* &head){
   head->setColor(0);
   uncle->setColor(0);
@@ -177,8 +178,9 @@ void Case3(node* &root, node* &Gparent, node* &uncle, node* &head){
     add2Tree(root, Gparent, head);    
   }
 }
-
+//Following function to addTree. Determines case and executes proper measures.
 void add2Tree(node* &root, node* &head, node* thingy){
+  //Case one and two.
   if(head == thingy){
     thingy->setColor(0);
     return;
@@ -246,7 +248,6 @@ void add2Tree(node* &root, node* &head, node* thingy){
         }
 	head->setColor(0);
         thingy->setColor(1);
-	cout << "Head: " << head->getVal() << endl;
       }
       else if(Gparent->getLeftNext() == head && head->getLeftNext() == thingy){
         //Left Left case 5
@@ -265,9 +266,8 @@ void add2Tree(node* &root, node* &head, node* thingy){
     }
   }
 }
-
+//Performs a left rotation;
 void leftRotation(node* &head, node* &thingy){
-  cout << "LR" << endl;
   node* thingyLeft = thingy->getLeftNext();
   node* tempP = head;
   head = thingy;
@@ -286,12 +286,9 @@ void leftRotation(node* &head, node* &thingy){
   if(thingyLeft != NULL){
     thingyLeft->setParent(thingy);
   }
-  cout << "this is head: " << head->getVal() << endl;
-  cout << "This is thingy: " << thingy->getVal() << endl;
 }
-
+//Performs a right rotation
 void rightRotation(node* &head, node* &thingy){
-  cout << "RR" << endl;
   node* thingyRight = thingy->getRightNext();
   node* tempP =	head;
   head = thingy;
@@ -312,8 +309,6 @@ void rightRotation(node* &head, node* &thingy){
   if(thingyRight != NULL){
     thingyRight->setParent(thingy);
   }
-  cout << "this is head: " << head->getVal() << endl;
-  cout << "This is thingy: " <<	thingy->getVal() << endl;
 }
 
 

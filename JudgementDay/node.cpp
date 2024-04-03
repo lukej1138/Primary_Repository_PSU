@@ -1,6 +1,6 @@
 /*
   Lucas Johnson
-  3/19/2024
+  4/3/2024
   CPP file for node class
  */
 
@@ -10,7 +10,7 @@
 
 //Constructor for node class
 node::node(int val, int col) {
-  //Assign node's student based on construction parameter
+  //Assign node's data/color based on construction parameter
   val1 = val;
   color = col;
   //Set the next node to null (will need to set node later)
@@ -24,7 +24,7 @@ int node::getVal() {
   return val1;
 }
 
-//Setter function for Node's next node (left or right)
+//Setter function for Node's next node (left or right) or parent or color
 void node::setLeftNext(node* newNext) {
   nextNodeL = newNext;
 }
@@ -40,7 +40,7 @@ void node::setParent(node* newParent){
 void node::setColor(int col){
   color = col;
 }
-//Getter function for Node's next node (left or irght)
+//Getter function for Node's next node (left or irght) or parent or color
 node* node::getLeftNext() {
   return nextNodeL;
 }
