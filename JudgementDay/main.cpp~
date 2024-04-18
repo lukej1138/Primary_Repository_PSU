@@ -308,6 +308,8 @@ void leftRotation(node* &head, node* &thingy){
   if(thingyLeft != NULL){
     thingyLeft->setParent(thingy);
   }
+  int count = 0;
+  printTree(head, count);
 }
 //Performs a right rotation
 void rightRotation(node* &head, node* &thingy){
@@ -331,6 +333,8 @@ void rightRotation(node* &head, node* &thingy){
   if(thingyRight != NULL){
     thingyRight->setParent(thingy);
   }
+  int count = 0;
+  printTree(head, count);
 }
 
 
@@ -363,7 +367,7 @@ node* successorFinder(node* head){
     return head;
   }
 }                                                                                                                                                                                                          
-//First deletion function; performs initial deletion step without any fixes. Pretty much just gets rid of the node based on the case
+
 void deletion1(node* head, int thingy, node* &root){
   if(head == NULL){
     cout << "No Tree" << endl;
@@ -459,15 +463,15 @@ void deletion1(node* head, int thingy, node* &root){
       successorKid->setParent(successor->getParent());
     }
     saveColor = successor->getColor();
-    Gparent = successor->getParent();
     delete successor;
-    deletion2(successorKid, saveColor, root, Gparent);
+    deletion2(successorKid, saveColor, root, head);
     return;
   }
+  cout << "This one" << endl;
   deletion2(x, saveColor, root, Gparent); 
 }
 
-//Roots out basic cases to determine doubly black case or not
+
 void deletion2(node* newHead, int ogColor, node* &root, node* Gparent){
   if(newHead != NULL){
     if(ogColor == 1 || newHead->getColor() == 1){
@@ -476,12 +480,14 @@ void deletion2(node* newHead, int ogColor, node* &root, node* Gparent){
     }
   }
   if((newHead == NULL || newHead->getColor() == 0) && ogColor == 0){
+    cout << "HERE?" << endl;
     DoublyBlackCase(newHead, root, Gparent);
   }
+  cout << "end of del2" << endl;
   return;
 }
 
-//Use when sorting out doubly black cases
+
 void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
   node* ogGparent = Gparent;
   if(newHead == root){
@@ -495,9 +501,17 @@ void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
   }else{
     uncle = Gparent->getRightNext();
   }
-  //Black uncle and kids  
+  cout << "Gp" << Gparent->getVal() << endl;
+  cout << newHead << endl;
+  cout << "uncle" << uncle->getVal() << endl;
+  
+  //Black uncle and kids
+  
+
+  
   if((uncle != NULL && uncle->getColor() == 0) && (uncle->getLeftNext() == NULL || uncle->getLeftNext()->getColor() == 0) && (uncle->getRightNext() == NULL || uncle->getRightNext()->getColor() == 0)\
 ){
+    cout << "Got into correct black black situation" << endl;
     uncle->setColor(1);
     if(Gparent->getColor() == 0){
       DoublyBlackCase(Gparent, root, Gparent->getParent());
@@ -508,6 +522,7 @@ void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
  } 
   //Sibling black and red kids
   else if((uncle != NULL && uncle->getColor() == 0) && ((uncle->getRightNext() != NULL && uncle->getRightNext()->getColor() == 1) ||(uncle->getLeftNext() != NULL && uncle->getLeftNext()->getColor() == 1))){
+    cout << "Sibling black and red children" << endl;
     node* nephew = NULL;
     if(uncle->getRightNext() != NULL && uncle->getRightNext()->getColor() == 1){
       nephew = uncle->getRightNext();
@@ -515,6 +530,13 @@ void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
     else{
       nephew = uncle->getLeftNext();
     }
+    if(nephew != NULL){
+      cout << "nephew" << nephew->getVal() << endl;
+    }
+    else{
+      cout << "nephew" << nephew << endl;
+    }
+
     //Left Left
     if(Gparent->getLeftNext() == uncle && uncle->getLeftNext() == nephew){
       if(Gparent == root){
@@ -538,6 +560,7 @@ void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
       return;
     }
     //Right Left
+    //RECOLOR NODES FOR NEPHEW AND UNCLE JUST SWITCH COLORS
     else if(Gparent->getRightNext() == uncle && uncle->getLeftNext() == nephew){
       uncle->setColor(nephew->getColor());
       nephew->setColor(0);
@@ -554,6 +577,10 @@ void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
     else if(Gparent->getLeftNext() == uncle && uncle->getRightNext() == nephew){
       uncle->setColor(nephew->getColor());
       nephew->setColor(0);
+      if(uncle->getColor() == 0){
+        uncle->setColor(1);
+      }else{uncle->setColor(1);
+      }
       leftRotation(uncle, nephew);
       if(Gparent == root){
         rightRotation(root, uncle);
@@ -561,11 +588,11 @@ void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
       else{
         rightRotation(Gparent, uncle);
       }
-      uncle->setColor(nephew->getColor());
       return;
     }
   }
   else if(uncle->getColor() == 1){
+    cout << "uncle color: " << uncle->getColor() << endl;
     Gparent->setColor(uncle->getColor());
     uncle->setColor(0);
     if(Gparent->getLeftNext() == uncle){
@@ -587,4 +614,111 @@ void DoublyBlackCase(node* newHead, node* &root, node* Gparent){
     DoublyBlackCase(newHead, root, ogGparent);
   }
 }
+//Nightmare fuel
+//Uses the above tree to access to the node that we want to remove
+//Determines the number of children. Searches for successor (accidentally
+//called predecessor in code, whoopsies) if their are two children, if their is just one replaces with that child. 
+/*void delTree(node* head, node* previous, int thingy){
+  if(head == NULL){
+    cout << "The number doesn't exist in the data structure" << endl;
+    return;
+  }
 
+  if(head->getVal() != thingy){
+    if(head->getVal() > thingy){
+      previous = head;
+      head = head->getLeftNext();
+      delTree(head, previous, thingy);
+    }
+    else{
+      previous = head;
+      head = head->getRightNext();
+      delTree(head, previous, thingy);
+    }
+  }
+  else{
+    if(head->getLeftNext() != NULL && head->getRightNext() != NULL){
+      node* temp = previous;
+      previous = head;
+      node* predecessor = delTree2(head->getRightNext(), previous, head->getVal());
+      previous = temp;
+      head->setVal(predecessor->getVal());
+      delete predecessor;
+    }
+    else if(head->getLeftNext() != NULL){
+      if(previous == head){
+	previous->setVal(previous->getLeftNext()->getVal());
+        node* temp = previous->getLeftNext();
+        previous->setLeftNext(NULL);
+        delete temp;
+        return;
+      }
+      if(previous->getLeftNext() == head){
+	previous->setLeftNext(head->getLeftNext());
+	delete head;
+	return;
+      }
+      else{
+	previous->setRightNext(head->getLeftNext());
+	delete head;
+	return;
+      }
+    }
+    else if(head->getRightNext() != NULL){
+      if(previous == head){
+	previous->setVal(previous->getRightNext()->getVal());
+	node* temp = previous->getRightNext();
+	previous->setRightNext(NULL);
+	delete temp;
+	return;
+      }
+      if(previous->getLeftNext() == head){
+        previous->setLeftNext(head->getRightNext());
+	delete head;
+        return;
+      }
+      else{
+        previous->setRightNext(head->getRightNext());
+        delete head;
+        return;
+      }
+    }
+    else{
+      if(previous == head){
+	previous = NULL;
+	return;
+      }
+      if(previous->getLeftNext() == head){
+        previous->setLeftNext(NULL);
+        delete head;
+        return;
+      }
+      else{
+        previous->setRightNext(NULL);
+        delete head;
+        return;
+      }
+
+    }
+    //Create deletion function for (case 1, one child on head so just make it become new head and delete old head) or (case 2, two children so use predecessor method of right one then left all the way)
+  }
+
+}
+*/
+//Recursively runs thru tree to find a predecessor to be used in the main delete
+/*node* delTree2(node* head, node* previous, int initialHead){
+  if(head->getLeftNext() != NULL){
+    previous = head;
+    return delTree2(head->getLeftNext(), previous, initialHead);
+  }
+  else{
+    if(previous->getVal() == initialHead){
+      previous->setRightNext(head->getRightNext());
+      return head;
+    }
+    previous->setLeftNext(head->getRightNext());
+    return head;
+  }
+
+}
+*/
