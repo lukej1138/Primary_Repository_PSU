@@ -25,3 +25,6 @@ Creates my own rendition of a hashmap, using linked lists to deal with collision
 
 ### Dungeon Crawler:
 Not as advanced as the other projects, but deserves an honorable mention. Based off of the text-based adventureg game Zork, the project produces a rudimentary dungeon for the user to explore, picking up items before eventually reaching the end.
+
+## Miscellaneous:
+Note that some projects were just for practice with C++, such as Tic-Tac-Toe, ljHeap, and practiceFiles. Others are very common projects that I didn't think were worth mentioning (Binary Search Tree, Shunting Yard Algorithm).
