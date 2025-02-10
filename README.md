@@ -21,7 +21,7 @@ A data sorting algorithm that uses a tree of nodes that are either red or black.
 Created an adjacency matrix (20 x 20 maximum) that connected different "nodes" together by a certain weight. Allowed users to add and deleted both nodes and edges (connector line) as they saw fit. Additionally, the program taught me how to implement Dijkstra's Algorithm to find the shortest path between given two nodes.
 
 ### Hash
-Creates my own rendition of a hashmap, using linked lists to deal with collisions. Specifically designed for taking in student objects and storing them, emphasizing retrieval time above all else. Able to return with O(1) time complexity at best or w/ collisions O(n), where n is the number of nodes in the linked list. Though I implemented a list, rehashing would create a new list that was double the size of the previous, resorting the previous data values accordingly and asserting that the hashmap was never "full". 
+Creates my own rendition of a hash table, using linked lists to deal with collisions. Specifically designed for taking in student objects and storing them, emphasizing retrieval time above all else. Able to return with O(1) time complexity at best or w/ collisions O(n), where n is the number of nodes in the linked list. Though I implemented a list, rehashing would create a new list that was double the size of the previous, resorting the previous data values accordingly and asserting that the hashmap was never "full". 
 
 ### Dungeon Crawler:
 Not as advanced as the other projects, but deserves an honorable mention. Based off of the text-based adventureg game Zork, the project produces a rudimentary dungeon for the user to explore, picking up items before eventually reaching the end.
